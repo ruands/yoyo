@@ -52,10 +52,10 @@ class LocationWeatherView(APIView):
                 temps = utils.get_temps_from_forecast(forecast)
 
                 data = {
-                    "maximum": max(temps),
-                    "minimum": min(temps),
+                    "maximum": max(temps) if temps else 0,
+                    "minimum": min(temps) if temps else 0,
                     "average": utils.get_avg_temp(temps),
-                    "median": statistics.median(temps)
+                    "median": statistics.median(temps) if temps else 0
                 }
 
                 serializer = serializers.LocationWeatherSerializer(data=data)
@@ -67,4 +67,7 @@ class LocationWeatherView(APIView):
             return Response(status=204)
         else:
             json_error = response.json()
-            return Response(json_error.get("error").get("message"), status=response.status_code)
+            error = json_error.get("error")
+            if error:
+                return Response(error.get("message", "Something went wrong!"), status=response.status_code)
+            return Response("Something went wrong!", status=response.status_code)

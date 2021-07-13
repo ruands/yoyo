@@ -16,4 +16,4 @@ def get_temps_from_forecast(forecast):
 
 def get_avg_temp(temps):
     # Return sum / len, and round to 2 decimals
-    return round(sum(temps) / len(temps), 2)
+    return round(sum(temps) / len(temps), 2) if temps else 0
